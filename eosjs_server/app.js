@@ -22,8 +22,9 @@ app.get('/', (req, res) => {
 
 app.post('/push_transaction', async (req, res) => {
   try {
-    const result = await api.transact(req.body, {'blocksBehind': 3, 'expireSeconds': 30});
-    res.send(result)
+    //const result = await api.transact(req.body, {'blocksBehind': 3, 'expireSeconds': 30});
+    //res.send(result)
+    res.send({result: 'ok'})
   } catch (e) {
     res.send({"error": "" + e})
   }

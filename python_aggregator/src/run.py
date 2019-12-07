@@ -23,7 +23,7 @@ EMPTY_DB_START_BLOCK = os.getenv('EMPTY_DB_START_BLOCK', '')
 EXCLUDED_ACCOUNTS = os.getenv('EXCLUDED_ACCOUNTS','').split(',')
 
 # block collection and scheduling constants
-BLOCK_ACQUISITION_THREADS = 20
+BLOCK_ACQUISITION_THREADS = 100
 MAX_ACCOUNTS_PER_SUBMISSION = 10
 SUBMISSION_INTERVAL_SECONDS = 10
 
@@ -104,7 +104,8 @@ def submit_resource_usage():
                     logger.info(f'Submitting resource usage totals for {previous_date_string}...')
                     tx = {'actions': [action]}
                     logger.info(tx)
-                    response = requests.post('http://eosjsserver:3000/push_transaction', json=tx, timeout=10).json()
+                    # response = requests.post('http://eosjsserver:3000/push_transaction', json=tx, timeout=10).json()
+                    # logger.info(f'Transaction {response["transaction_id"]} successfully submitted!')
                     logger.info(f'Transaction {response["transaction_id"]} successfully submitted!')
                     redis.set('last_usage_total_sent', previous_date_string)
                     time.sleep(5)
@@ -132,8 +133,8 @@ def submit_resource_usage():
                 logger.info(f'Submitting resource usage stats for {previous_date_string}...')
                 tx = {'actions': actions}
                 logger.info(tx)
-                response = requests.post('http://eosjsserver:3000/push_transaction', json=tx, timeout=10).json()
-                logger.info(f'Transaction {response["transaction_id"]} successfully submitted!')
+                # response = requests.post('http://eosjsserver:3000/push_transaction', json=tx, timeout=10).json()
+                # logger.info(f'Transaction {response["transaction_id"]} successfully submitted!')
 
                 # remove data from -current once successfully sent
                 for account in previous_date_accounts[:MAX_ACCOUNTS_PER_SUBMISSION]:

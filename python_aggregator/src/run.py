@@ -22,6 +22,7 @@ SUBMISSION_PERMISSION = os.getenv('SUBMISSION_PERMISSION', '')
 EMPTY_DB_START_BLOCK = os.getenv('EMPTY_DB_START_BLOCK', '')
 EXCLUDED_ACCOUNTS = os.getenv('EXCLUDED_ACCOUNTS','').split(',')
 ENV = os.getenv('ENVIRONMENT', 'DEV')
+REDIS_HOST = os.getenv('REDIS_HOST', 'redis')
 
 # block collection and scheduling constants
 BLOCK_ACQUISITION_THREADS = 100
@@ -49,7 +50,7 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 # establish connection to redis server
-redis = redis.StrictRedis(host='redis', port=6379, db=0, decode_responses=True)
+redis = redis.StrictRedis(host=REDIS_HOST, port=6379, db=0, decode_responses=True)
 
 # if no redis dump file is present, determine starting block number and initialise db
 if not os.path.exists('/data/dump.rdb'):

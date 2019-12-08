@@ -1,4 +1,6 @@
 FROM python:3.7.0-slim
-COPY requirements.txt /tmp/requirements.txt
-RUN pip3 install -r /tmp/requirements.txt
 WORKDIR /usr/src/app
+COPY requirements.txt /tmp/requirements.txt
+COPY src ./src
+RUN pip3 install -r /tmp/requirements.txt
+CMD [ "python", "src/run.py" ]

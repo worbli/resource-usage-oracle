@@ -1,5 +1,6 @@
 import csv
 import logging
+import sys
 import traceback
 import json
 import os
@@ -16,11 +17,11 @@ from apscheduler.schedulers.background import BackgroundScheduler
 # get environment variables
 API_NODE = os.getenv('EOSIO_API_NODE', '')
 CONTRACT_ACCOUNT = os.getenv('CONTRACT_ACCOUNT', '')
-CONTRACT_ACTION = os.getenv('CONTRACT_ACTION', '')
 SUBMISSION_ACCOUNT = os.getenv('SUBMISSION_ACCOUNT', '')
 SUBMISSION_PERMISSION = os.getenv('SUBMISSION_PERMISSION', '')
 EMPTY_DB_START_BLOCK = os.getenv('EMPTY_DB_START_BLOCK', '')
 EXCLUDED_ACCOUNTS = os.getenv('EXCLUDED_ACCOUNTS','').split(',')
+ENV = os.getenv('ENVIRONMENT', 'DEV')
 
 # block collection and scheduling constants
 BLOCK_ACQUISITION_THREADS = 100
@@ -37,7 +38,11 @@ signal.signal(signal.SIGTERM, stop_container)
 # logging configuration
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-handler = logging.FileHandler('debug.log')
+if ENV == 'DEV':
+    handler = logging.StreamHandler(sys.stdout)
+else:
+    handler = logging.FileHandler('debug.log')
+
 handler.setLevel(logging.INFO)
 formatter = logging.Formatter(f'%(asctime)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)

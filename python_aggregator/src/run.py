@@ -39,7 +39,7 @@ signal.signal(signal.SIGTERM, stop_container)
 # logging configuration
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-if ENV == 'DEV':
+if ENV != 'local':
     handler = logging.StreamHandler(sys.stdout)
 else:
     handler = logging.FileHandler('debug.log')

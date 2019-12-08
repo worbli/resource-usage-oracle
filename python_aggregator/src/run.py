@@ -51,9 +51,9 @@ logger.addHandler(handler)
 
 # establish connection to redis server
 redis = redis.StrictRedis(host=REDIS_HOST, port=6379, db=0, decode_responses=True)
-
+last_block = redis.get('last_block')
 # if no redis dump file is present, determine starting block number and initialise db
-if not os.path.exists('/data/dump.rdb'):
+if not last_block:
     try:
         if EMPTY_DB_START_BLOCK:
             start_block_num = EMPTY_DB_START_BLOCK
@@ -69,6 +69,8 @@ if not os.path.exists('/data/dump.rdb'):
     except:
         logger.error('Could not initialise database!')
         logger.error(traceback.format_exc())
+else:
+    logger.info(f'resuming on last block: {int(last_block)}')
 
 # submit data to contract according to scheduling constants
 def submit_resource_usage():
@@ -195,7 +197,7 @@ def export_data_to_csv():
 scheduler = BackgroundScheduler()
 scheduler.add_job(submit_resource_usage, 'interval', seconds=SUBMISSION_INTERVAL_SECONDS, id='submit_resource_usage')
 scheduler.add_job(prune_data, 'interval', minutes=60, id='prune_data')
-scheduler.add_job(export_data_to_csv, 'interval', minutes=15, id='export_data_to_csv')
+#scheduler.add_job(export_data_to_csv, 'interval', minutes=15, id='export_data_to_csv')
 scheduler.start()
 
 
